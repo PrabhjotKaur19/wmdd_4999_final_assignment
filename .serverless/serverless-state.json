@@ -1,0 +1,232 @@
+{
+  "service": {
+    "service": "msgfinalassignment",
+    "serviceObject": {
+      "name": "msgfinalassignment"
+    },
+    "provider": {
+      "stage": "dev",
+      "region": "us-west-2",
+      "variableSyntax": "\\${([ ~:a-zA-Z0-9._'\",\\-\\/\\(\\)]+?)}",
+      "name": "aws",
+      "runtime": "nodejs6.10",
+      "iamRoleStatements": [
+        {
+          "Effect": "Allow",
+          "Action": [
+            "s3:*"
+          ],
+          "Resource": "*"
+        }
+      ],
+      "environment": {
+        "TWILIO_ACCOUNT_SID": "ACe6e7ca1a0551160c703354e9ea18883e",
+        "TWILIO_AUTH_TOKEN": "d2dadf2fe34cfe06472adecfaf217b73",
+        "TWILIO_PHONE_NUMBER": "+16043326627"
+      },
+      "versionFunctions": true,
+      "remoteFunctionData": null,
+      "compiledCloudFormationTemplate": {
+        "AWSTemplateFormatVersion": "2010-09-09",
+        "Description": "The AWS CloudFormation template for this Serverless application",
+        "Resources": {
+          "ServerlessDeploymentBucket": {
+            "Type": "AWS::S3::Bucket"
+          },
+          "PostprocessLogGroup": {
+            "Type": "AWS::Logs::LogGroup",
+            "Properties": {
+              "LogGroupName": "/aws/lambda/msgfinalassignment-dev-postprocess"
+            }
+          },
+          "IamRoleLambdaExecution": {
+            "Type": "AWS::IAM::Role",
+            "Properties": {
+              "AssumeRolePolicyDocument": {
+                "Version": "2012-10-17",
+                "Statement": [
+                  {
+                    "Effect": "Allow",
+                    "Principal": {
+                      "Service": [
+                        "lambda.amazonaws.com"
+                      ]
+                    },
+                    "Action": [
+                      "sts:AssumeRole"
+                    ]
+                  }
+                ]
+              },
+              "Policies": [
+                {
+                  "PolicyName": {
+                    "Fn::Join": [
+                      "-",
+                      [
+                        "dev",
+                        "msgfinalassignment",
+                        "lambda"
+                      ]
+                    ]
+                  },
+                  "PolicyDocument": {
+                    "Version": "2012-10-17",
+                    "Statement": [
+                      {
+                        "Effect": "Allow",
+                        "Action": [
+                          "logs:CreateLogStream"
+                        ],
+                        "Resource": [
+                          {
+                            "Fn::Sub": "arn:aws:logs:${AWS::Region}:${AWS::AccountId}:log-group:/aws/lambda/msgfinalassignment-dev-postprocess:*"
+                          }
+                        ]
+                      },
+                      {
+                        "Effect": "Allow",
+                        "Action": [
+                          "logs:PutLogEvents"
+                        ],
+                        "Resource": [
+                          {
+                            "Fn::Sub": "arn:aws:logs:${AWS::Region}:${AWS::AccountId}:log-group:/aws/lambda/msgfinalassignment-dev-postprocess:*:*"
+                          }
+                        ]
+                      },
+                      {
+                        "Effect": "Allow",
+                        "Action": [
+                          "s3:*"
+                        ],
+                        "Resource": "*"
+                      }
+                    ]
+                  }
+                }
+              ],
+              "Path": "/",
+              "RoleName": {
+                "Fn::Join": [
+                  "-",
+                  [
+                    "msgfinalassignment",
+                    "dev",
+                    "us-west-2",
+                    "lambdaRole"
+                  ]
+                ]
+              }
+            }
+          },
+          "PostprocessLambdaFunction": {
+            "Type": "AWS::Lambda::Function",
+            "Properties": {
+              "Code": {
+                "S3Bucket": {
+                  "Ref": "ServerlessDeploymentBucket"
+                },
+                "S3Key": "serverless/msgfinalassignment/dev/1512640777902-2017-12-07T09:59:37.902Z/msgfinalassignment.zip"
+              },
+              "FunctionName": "msgfinalassignment-dev-postprocess",
+              "Handler": "handler.postprocess",
+              "MemorySize": 1024,
+              "Role": {
+                "Fn::GetAtt": [
+                  "IamRoleLambdaExecution",
+                  "Arn"
+                ]
+              },
+              "Runtime": "nodejs6.10",
+              "Timeout": 6,
+              "Environment": {
+                "Variables": {
+                  "TWILIO_ACCOUNT_SID": "ACe6e7ca1a0551160c703354e9ea18883e",
+                  "TWILIO_AUTH_TOKEN": "d2dadf2fe34cfe06472adecfaf217b73",
+                  "TWILIO_PHONE_NUMBER": "+16043326627"
+                }
+              }
+            },
+            "DependsOn": [
+              "PostprocessLogGroup",
+              "IamRoleLambdaExecution"
+            ]
+          },
+          "PostprocessLambdaVersionGelNTQRmy7UV9w1ayauO8mmRrsc67nJnTeuHaWYo3Y": {
+            "Type": "AWS::Lambda::Version",
+            "DeletionPolicy": "Retain",
+            "Properties": {
+              "FunctionName": {
+                "Ref": "PostprocessLambdaFunction"
+              },
+              "CodeSha256": "GelNTQRmy7UV9w1ay+auO8mmRrsc67nJnTeuHaWYo3Y="
+            }
+          }
+        },
+        "Outputs": {
+          "ServerlessDeploymentBucketName": {
+            "Value": {
+              "Ref": "ServerlessDeploymentBucket"
+            }
+          },
+          "PostprocessLambdaFunctionQualifiedArn": {
+            "Description": "Current Lambda function version",
+            "Value": {
+              "Ref": "PostprocessLambdaVersionGelNTQRmy7UV9w1ayauO8mmRrsc67nJnTeuHaWYo3Y"
+            }
+          }
+        }
+      },
+      "coreCloudFormationTemplate": {
+        "AWSTemplateFormatVersion": "2010-09-09",
+        "Description": "The AWS CloudFormation template for this Serverless application",
+        "Resources": {
+          "ServerlessDeploymentBucket": {
+            "Type": "AWS::S3::Bucket"
+          }
+        },
+        "Outputs": {
+          "ServerlessDeploymentBucketName": {
+            "Value": {
+              "Ref": "ServerlessDeploymentBucket"
+            }
+          }
+        }
+      },
+      "vpc": {}
+    },
+    "custom": {
+      "bucket": "imgsharingbct"
+    },
+    "plugins": [
+      "serverless-plugin-existing-s3"
+    ],
+    "functions": {
+      "postprocess": {
+        "handler": "handler.postprocess",
+        "events": [
+          {
+            "existingS3": {
+              "bucket": "imgsharingbct",
+              "event": "s3:ObjectCreated:*",
+              "rules": [
+                {
+                  "suffix": ".jpg"
+                }
+              ]
+            }
+          }
+        ],
+        "name": "msgfinalassignment-dev-postprocess",
+        "package": {},
+        "vpc": {}
+      }
+    },
+    "artifact": "C:\\Users\\Prabhjot\\Documents\\vShareUserData\\WMDD\\4th Sem\\SpecialTopic\\finalassignment\\.serverless\\msgfinalassignment.zip"
+  },
+  "package": {
+    "artifactDirectoryName": "serverless/msgfinalassignment/dev/1512640777902-2017-12-07T09:59:37.902Z",
+    "artifact": "msgfinalassignment.zip"
+  }
+}
